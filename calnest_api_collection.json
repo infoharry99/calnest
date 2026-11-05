@@ -1,0 +1,348 @@
+{
+  "info": {
+    "name": "CalNest API Collection",
+    "description": "Collection of all 27 remote calls and endpoints from the CalNest API Reference specification (Google Calendar, Tasks, People, Microsoft Graph, Device Links & SharedPreferences sync)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Authentication & OAuth",
+      "item": [
+        {
+          "name": "Google Sign-In / Token Exchange",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@gmail.com\",\n  \"name\": \"Google User\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/oauth/google/token" }
+          }
+        },
+        {
+          "name": "Microsoft OAuth Authorize Info",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/consumers/oauth2/v2.0/authorize?client_id=calnest_client&redirect_uri=msauth://calnest" }
+          }
+        },
+        {
+          "name": "Microsoft OAuth v2.0 Token (MSAL)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"client_id\": \"sample_client\",\n  \"grant_type\": \"authorization_code\",\n  \"code\": \"mock_code\",\n  \"redirect_uri\": \"msauth://calnest\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/consumers/oauth2/v2.0/token" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Google Calendar API",
+      "item": [
+        {
+          "name": "List User Calendars",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/calendar/v3/users/me/calendarList" }
+          }
+        },
+        {
+          "name": "List Calendar Events",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/calendar/v3/calendars/user@gmail.com/events?timeMin=2026-10-01T00:00:00Z&timeMax=2026-10-31T23:59:59Z&orderBy=startTime&maxResults=250" }
+          }
+        },
+        {
+          "name": "Create Event",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"summary\": \"Client call\",\n  \"description\": \"Discuss renewal\",\n  \"location\": \"Zoom\",\n  \"start\": { \"dateTime\": \"2026-10-20T15:00:00+05:30\" },\n  \"end\": { \"dateTime\": \"2026-10-20T16:00:00+05:30\" }\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/calendar/v3/calendars/user@gmail.com/events" }
+          }
+        },
+        {
+          "name": "Patch Event",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"summary\": \"Client call (moved)\",\n  \"start\": { \"dateTime\": \"2026-10-20T16:00:00+05:30\" },\n  \"end\": { \"dateTime\": \"2026-10-20T17:00:00+05:30\" }\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/calendar/v3/calendars/user@gmail.com/events/7k3c9qa1b2" }
+          }
+        },
+        {
+          "name": "Delete Event",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/calendar/v3/calendars/user@gmail.com/events/7k3c9qa1b2" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Google Tasks API",
+      "item": [
+        {
+          "name": "List Task Lists",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/tasks/v1/users/@me/lists" }
+          }
+        },
+        {
+          "name": "List Tasks in List",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/tasks/v1/lists/MTIzNDU2/tasks?maxResults=200" }
+          }
+        },
+        {
+          "name": "Create Task",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Renew domain\",\n  \"notes\": \"btotmail.com\",\n  \"due\": \"2026-10-25T00:00:00.000Z\",\n  \"status\": \"needsAction\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/tasks/v1/lists/MTIzNDU2/tasks" }
+          }
+        },
+        {
+          "name": "Patch Task / Complete",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"completed\",\n  \"completed\": \"2026-10-17T06:00:00.000Z\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/tasks/v1/lists/MTIzNDU2/tasks/dGFzay0x" }
+          }
+        },
+        {
+          "name": "Delete Task",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/tasks/v1/lists/MTIzNDU2/tasks/dGFzay0x" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Google People API",
+      "item": [
+        {
+          "name": "Get Connections (Birthdays)",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/people/v1/people/me/connections?personFields=names,birthdays,photos,phoneNumbers&pageSize=200" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Microsoft Graph API",
+      "item": [
+        {
+          "name": "Get Profile (/me)",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/v1.0/me" }
+          }
+        },
+        {
+          "name": "List Outlook Calendars",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/v1.0/me/calendars?$select=id,name,isDefaultCalendar,color" }
+          }
+        },
+        {
+          "name": "Primary CalendarView",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/v1.0/me/calendarView?startDateTime=2026-10-01T00:00:00Z&endDateTime=2026-10-31T23:59:59Z&$top=500" }
+          }
+        },
+        {
+          "name": "Specific CalendarView",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/v1.0/me/calendars/AAMkAGI2/calendarView?startDateTime=2026-10-01T00:00:00Z&endDateTime=2026-10-31T23:59:59Z&$top=500" }
+          }
+        },
+        {
+          "name": "Create Outlook Event",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"subject\": \"Client call\",\n  \"body\": { \"contentType\": \"text\", \"content\": \"Discuss renewal\" },\n  \"location\": { \"displayName\": \"Zoom\" },\n  \"start\": { \"dateTime\": \"2026-10-20T10:00:00\", \"timeZone\": \"UTC\" },\n  \"end\": { \"dateTime\": \"2026-10-20T11:00:00\", \"timeZone\": \"UTC\" },\n  \"isAllDay\": false\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/v1.0/me/calendars/AAMkAGI2/events" }
+          }
+        },
+        {
+          "name": "Patch Outlook Event",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"subject\": \"Client call (moved)\",\n  \"start\": { \"dateTime\": \"2026-10-20T12:00:00\", \"timeZone\": \"UTC\" },\n  \"end\": { \"dateTime\": \"2026-10-20T13:00:00\", \"timeZone\": \"UTC\" }\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/v1.0/me/calendars/AAMkAGI2/events/AAMkAGI2-evt1" }
+          }
+        },
+        {
+          "name": "Delete Outlook Event",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/v1.0/me/calendars/AAMkAGI2/events/AAMkAGI2-evt1" }
+          }
+        },
+        {
+          "name": "List To Do Lists",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/v1.0/me/todo/lists" }
+          }
+        },
+        {
+          "name": "List To Do Tasks",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/v1.0/me/todo/lists/AQMkADAw/tasks?$top=200" }
+          }
+        },
+        {
+          "name": "Create To Do Task",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Renew domain\",\n  \"body\": { \"contentType\": \"text\", \"content\": \"btotmail.com\" },\n  \"dueDateTime\": { \"dateTime\": \"2026-10-25T00:00:00\", \"timeZone\": \"UTC\" },\n  \"status\": \"notStarted\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/v1.0/me/todo/lists/AQMkADAw/tasks" }
+          }
+        },
+        {
+          "name": "Patch To Do Task",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"completed\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/v1.0/me/todo/lists/AQMkADAw/tasks/AQMkADAw-t1" }
+          }
+        },
+        {
+          "name": "Delete To Do Task",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/v1.0/me/todo/lists/AQMkADAw/tasks/AQMkADAw-t1" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Device Links (WhatsApp & SMS)",
+      "item": [
+        {
+          "name": "Generate WhatsApp Wish Link",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/device-links/whatsapp?phone=%2B919876543210&message=Happy%20Birthday%20Priya!" }
+          }
+        },
+        {
+          "name": "Generate SMS Wish Link",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/device-links/sms?phone=%2B919876543210&message=Happy%20Birthday%20Priya!" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "7. CalNest Backend (Storage Sync)",
+      "item": [
+        {
+          "name": "Overview & Health",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/calnest/overview" }
+          }
+        },
+        {
+          "name": "Get Preferences",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/calnest/preferences" }
+          }
+        },
+        {
+          "name": "Save Preferences",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"theme\": \"dark\",\n  \"calendar_view\": \"month\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/calnest/preferences" }
+          }
+        },
+        {
+          "name": "List Manual Birthdays",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/calnest/manual-birthdays" }
+          }
+        },
+        {
+          "name": "Create Manual Birthday",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Priya Shah\",\n  \"date\": \"1994-10-18\",\n  \"phone\": \"+91 98765 43210\",\n  \"relationship\": \"Friend\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/calnest/manual-birthdays" }
+          }
+        },
+        {
+          "name": "Get Reminder Settings",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/calnest/reminder-settings" }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://127.0.0.1:8000"
+    }
+  ]
+}
