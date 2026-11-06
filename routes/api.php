@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\EventController;
 use App\Http\Controllers\Api\GoogleCalendarController;
 use App\Http\Controllers\Api\GooglePeopleController;
 use App\Http\Controllers\Api\GoogleTasksController;
+use App\Http\Controllers\Api\GreetingController;
 use App\Http\Controllers\Api\MicrosoftGraphController;
 use App\Http\Controllers\Api\OverviewController;
 use App\Http\Controllers\Api\PreferenceController;
@@ -29,6 +30,7 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('calnest')->group(function () {
     // Health check & overview
     Route::get('overview', [OverviewController::class, 'index']);
+    Route::get('greetings', [GreetingController::class, 'index']);
 
     // Public Auth & Password Reset
     Route::post('register', [AuthController::class, 'register']);

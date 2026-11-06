@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\CalnestEvent;
+use App\Models\CalnestGreeting;
 use App\Models\CalnestManualBirthday;
 use App\Models\CalnestPreference;
 use App\Models\CalnestReminderSetting;
@@ -28,6 +29,7 @@ class OverviewController extends Controller
             'app' => 'CalNest Backend API',
             'version' => '1.0.0',
             'counts' => [
+                'greetings' => CalnestGreeting::count(),
                 'events' => CalnestEvent::count(),
                 'tasks' => CalnestTask::count(),
                 'manual_birthdays' => CalnestManualBirthday::count(),

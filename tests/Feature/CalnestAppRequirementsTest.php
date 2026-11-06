@@ -331,4 +331,38 @@ class CalnestAppRequirementsTest extends TestCase
             ->getJson('/api/calnest/events');
         $this->assertCount(0, $listRes->json('items'));
     }
+
+    public function test_greetings_library_endpoint_and_filtering(): void
+    {
+        $this->seed(\Database\Seeders\CalnestGreetingSeeder::class);
+
+        // 1. Public list without token
+        $res = $this->getJson('/api/calnest/greetings');
+        $res->assertStatus(200)
+            ->assertJsonStructure([
+                'items' => [
+                    '*' => [
+                        'id', 'title', 'message', 'category', 'emoji',
+                        'language', 'author', 'image_url', 'tags', 'created_at',
+                    ],
+                ],
+            ]);
+        $this->assertGreaterThanOrEqual(30, count($res->json('items')));
+
+        // 2. Filter by category (birthday)
+        $bdayRes = $this->getJson('/api/calnest/greetings?category=birthday');
+        $bdayRes->assertStatus(200);
+        foreach ($bdayRes->json('items') as $item) {
+            $this->assertEquals('birthday', $item['category']);
+        }
+
+        // 3. Filter with camelCase and snake_case (goodMorning vs good_morning)
+        $gmRes1 = $this->getJson('/api/calnest/greetings?category=goodMorning');
+        $gmRes1->assertStatus(200);
+        $this->assertNotEmpty($gmRes1->json('items'));
+
+        $gmRes2 = $this->getJson('/api/calnest/greetings?category=good_morning');
+        $gmRes2->assertStatus(200);
+        $this->assertNotEmpty($gmRes2->json('items'));
+    }
 }

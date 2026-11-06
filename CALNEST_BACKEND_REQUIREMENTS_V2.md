@@ -441,9 +441,58 @@
     "app": "CalNest Backend API",
     "version": "1.0.0",
     "counts": {
+      "greetings": 31,
       "events": 12,
       "tasks": 4,
       "manual_birthdays": 8
     }
   }
   ```
+
+---
+
+## 7. Greetings Library API
+
+### Greeting JSON Schema
+```json
+{
+  "id": 1,
+  "title": "Warm Birthday Wishes",
+  "message": "Wishing you a very Happy Birthday! May this special day bring you lots of joy...",
+  "category": "birthday",
+  "emoji": "🎂",
+  "language": "English",
+  "author": "CalNest",
+  "image_url": null,
+  "tags": ["birthday", "wishes", "celebration"],
+  "created_at": "2026-11-06T10:00:00+05:30"
+}
+```
+
+### 7.1 List Greetings Library
+`GET /api/calnest/greetings`
+* **Authentication**: Read-only, public content (token accepted if provided).
+* **Query Parameters (optional)**:
+  * `category`: Supports camelCase or snake_case (e.g. `birthday`, `goodMorning`, `good_morning`, `newJob`, `new_job`, `teachersDay`, `valentinesDay`, etc.).
+  * `language`: Filter by language (e.g. `English`).
+  * `q`: Search keyword across title and message text.
+* **Response (200 OK)**:
+  ```json
+  {
+    "items": [
+      {
+        "id": 1,
+        "title": "Warm Birthday Wishes",
+        "message": "Wishing you a very Happy Birthday! May this special day bring you lots of joy, laughter, and unforgettable moments.",
+        "category": "birthday",
+        "emoji": "🎂",
+        "language": "English",
+        "author": "CalNest",
+        "image_url": null,
+        "tags": ["birthday", "wishes", "celebration"],
+        "created_at": "2026-11-06T10:00:00+05:30"
+      }
+    ]
+  }
+  ```
+

@@ -362,6 +362,27 @@
           }
         }
       ]
+    },
+    {
+      "name": "6. Greetings Library",
+      "item": [
+        {
+          "name": "List Greetings Library",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/calnest/greetings" }
+          }
+        },
+        {
+          "name": "Filter Greetings by Category",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/calnest/greetings?category=birthday" }
+          }
+        }
+      ]
     }
   ],
   "variable": [
