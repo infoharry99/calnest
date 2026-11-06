@@ -14,17 +14,11 @@ class BirthdayController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $userId = $request->user()?->id;
+        $userId = $request->user()->id;
 
-        $query = CalnestManualBirthday::query();
-        if ($userId) {
-            $query->where(function ($q) use ($userId) {
-                $q->where('user_id', $userId)
-                  ->orWhereNull('user_id'); // backwards-compatible with existing unassigned rows
-            });
-        }
-
-        $birthdays = $query->orderBy('name', 'asc')->get();
+        $birthdays = CalnestManualBirthday::where('user_id', $userId)
+            ->orderBy('name', 'asc')
+            ->get();
 
         return response()->json([
             'items' => $birthdays->map(fn (CalnestManualBirthday $b) => $b->toResponseArray())->values(),
@@ -37,6 +31,8 @@ class BirthdayController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
+        $userId = $request->user()->id;
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'date' => 'required|string', // YYYY-MM-DD (1900 if year unknown)
@@ -46,7 +42,7 @@ class BirthdayController extends Controller
         ]);
 
         $birthday = CalnestManualBirthday::create([
-            'user_id' => $request->user()?->id,
+            'user_id' => $userId,
             'name' => $validated['name'],
             'date' => $validated['date'],
             'phone' => $validated['phone'] ?? null,
@@ -62,15 +58,8 @@ class BirthdayController extends Controller
      */
     public function update(Request $request, int|string $id): JsonResponse
     {
-        $userId = $request->user()?->id;
-        $query = CalnestManualBirthday::where('id', $id);
-        if ($userId) {
-            $query->where(function ($q) use ($userId) {
-                $q->where('user_id', $userId)->orWhereNull('user_id');
-            });
-        }
-
-        $birthday = $query->first();
+        $userId = $request->user()->id;
+        $birthday = CalnestManualBirthday::where('user_id', $userId)->where('id', $id)->first();
 
         if (!$birthday) {
             return response()->json(['message' => 'Birthday not found'], 404);
@@ -94,15 +83,8 @@ class BirthdayController extends Controller
      */
     public function destroy(Request $request, int|string $id): JsonResponse
     {
-        $userId = $request->user()?->id;
-        $query = CalnestManualBirthday::where('id', $id);
-        if ($userId) {
-            $query->where(function ($q) use ($userId) {
-                $q->where('user_id', $userId)->orWhereNull('user_id');
-            });
-        }
-
-        $birthday = $query->first();
+        $userId = $request->user()->id;
+        $birthday = CalnestManualBirthday::where('user_id', $userId)->where('id', $id)->first();
 
         if (!$birthday) {
             return response()->json(['message' => 'Birthday not found'], 404);

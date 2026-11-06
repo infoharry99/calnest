@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\CalnestGreeting;
+use App\Models\Greeting;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -16,7 +16,7 @@ class GreetingController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $query = CalnestGreeting::query();
+        $query = Greeting::query();
 
         if ($request->has('category') && !empty($request->query('category'))) {
             $cat = $request->query('category');
@@ -42,10 +42,21 @@ class GreetingController extends Controller
             });
         }
 
-        $greetings = $query->orderBy('id', 'asc')->get();
+        $items = $query->orderBy('id')->get()->map(fn ($g) => [
+            'id' => (int) $g->id,
+            'title' => (string) $g->title,
+            'message' => (string) $g->message,
+            'category' => (string) $g->category,
+            'emoji' => $g->emoji,
+            'language' => (string) ($g->language ?: 'English'),
+            'author' => (string) ($g->author ?: 'CalNest'),
+            'image_url' => $g->image_url,
+            'tags' => $g->tags ?? [],
+            'created_at' => optional($g->created_at)->toIso8601String(),
+        ]);
 
         return response()->json([
-            'items' => $greetings->map(fn (CalnestGreeting $g) => $g->toResponseArray())->values(),
+            'items' => $items,
         ], 200);
     }
 }
