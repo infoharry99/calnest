@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class CalnestPreference extends Model
 {
@@ -12,6 +13,7 @@ class CalnestPreference extends Model
     protected $table = 'calnest_preferences';
 
     protected $fillable = [
+        'user_id',
         'key',
         'value',
     ];
@@ -19,4 +21,9 @@ class CalnestPreference extends Model
     protected $casts = [
         'value' => 'json',
     ];
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 }

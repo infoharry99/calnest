@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class CalnestManualBirthday extends Model
 {
@@ -12,12 +13,30 @@ class CalnestManualBirthday extends Model
     protected $table = 'calnest_manual_birthdays';
 
     protected $fillable = [
+        'user_id',
         'name',
         'date',
         'phone',
         'relationship',
         'notes',
     ];
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function toResponseArray(): array
+    {
+        return [
+            'id' => (int) $this->id,
+            'name' => (string) $this->name,
+            'date' => (string) $this->date,
+            'phone' => $this->phone,
+            'relationship' => $this->relationship,
+            'notes' => $this->notes,
+        ];
+    }
 
     public function getCleanPhone(): ?string
     {

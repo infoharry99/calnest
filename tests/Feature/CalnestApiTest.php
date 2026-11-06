@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\User;
 use Database\Seeders\CalnestSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -231,6 +232,9 @@ class CalnestApiTest extends TestCase
 
     public function test_calnest_backend_preferences_and_birthdays(): void
     {
+        $user = User::factory()->create();
+        $this->actingAs($user, 'sanctum');
+
         // Preferences
         $prefRes = $this->postJson('/api/calnest/preferences', [
             'dark_mode' => true,
