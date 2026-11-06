@@ -1,10 +1,28 @@
 # CalNest Backend & API
 
-Official Laravel REST backend implementation for the **CalNest Flutter App** (`com.calnest.calnest`, version 1.0.0) based on the **CalNest API Reference** specification.
+Official Laravel REST backend implementation for the **CalNest Flutter App** (`com.calnest.calnest`, version 1.0.0).
+
+> **Latest Specification (November 2026):**
+> Complete documentation is available in [CALNEST_BACKEND_REQUIREMENTS_V2.md](file:///d:/P2/calnest/CALNEST_BACKEND_REQUIREMENTS_V2.md).
+> All routes are fully implemented, user-scoped with Sanctum, tested, and ready.
 
 ---
 
 ## 🚀 Features
+
+- **Native CalNest Server-Backed Services (Nov 2026 Specification)**:
+  - **Auth & Account**: Email + Password Register, Login, Logout, Me, Profile Update, and App-Store compliant Delete Account (`DELETE /api/calnest/me`).
+  - **Password Recovery & Verification**: 6-digit OTP verification (`/forgot-password`, `/reset-password`, `/verify-email`).
+  - **Events CRUD**: User-scoped events with proper date-range filtering (`?from=YYYY-MM-DD&to=YYYY-MM-DD`), full & partial updates, color codes, and all-day flags.
+  - **Tasks CRUD**: User-scoped tasks with priority (`low`, `medium`, `high`), due dates, and partial completion updates (`{"completed": true}`).
+  - **Manual Birthdays CRUD**: User-scoped birthdays with phone numbers and 1900-year fallback support.
+  - **Preferences & Reminder Settings**: Cloud synchronization of theme, view, and typed notification settings (`event_reminder_minutes`, `birthday_reminder_enabled`, `birthday_reminder_time`).
+- **Postman Collection Included**:
+  - Ready-to-import Postman collection: `calnest_api_collection.json`.
+- **Automated Test Coverage**:
+  - Comprehensive feature tests in `tests/Feature/CalnestAppRequirementsTest.php` ensuring all endpoints, user isolation, and validation rules pass.
+
+---
 
 - **Full Document Coverage**: Implements all 27 remote calls and services across all 7 sections of the CalNest specification:
   1. **Google OAuth & Authorization**: Silent sign-in and token exchange with calendar, tasks, and contacts scopes.
